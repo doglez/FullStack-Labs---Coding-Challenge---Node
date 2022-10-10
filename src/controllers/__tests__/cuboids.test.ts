@@ -273,9 +273,10 @@ describe('cuboid delete', () => {
     expect(response.status).toBe(HttpStatus.OK);
   });
 
-  // it('should not delete and return 404 status code when cuboids doesnt exists', () => {
-  //   const response = { status: HttpStatus.NOT_FOUND };
+  it('should not delete and return 404 status code when cuboids doesnt exists', async () => {
+    const response = await request(server).delete('/cuboids/999');
+    // const response = { status: HttpStatus.NOT_FOUND };
 
-  //   expect(response.status).toBe(HttpStatus.NOT_FOUND);
-  // });
+    expect(response.status).toBe(HttpStatus.NOT_FOUND);
+  });
 });

@@ -57,7 +57,10 @@ export const deleteCuboid = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  await Cuboid.query().deleteById(req.params.id);
+  const cuboid = await Cuboid.query().deleteById(req.params.id);
+  if (!cuboid) {
+    return res.sendStatus(HttpStatus.NOT_FOUND);
+  }
 
   return res.sendStatus(HttpStatus.OK);
 };
