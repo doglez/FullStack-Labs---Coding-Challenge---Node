@@ -52,3 +52,12 @@ export const update = async (
 
   return res.status(HttpStatus.OK).json(cuboid);
 };
+
+export const deleteCuboid = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  await Cuboid.query().deleteById(req.params.id);
+
+  return res.sendStatus(HttpStatus.OK);
+};
