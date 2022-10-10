@@ -218,18 +218,28 @@ describe('cuboid update', () => {
     expect(cuboid.bagId).toBe(bag.id);
   });
 
-  // it('should fail to update if insufficient capacity and return 422 status code', () => {
-  //   const [newWidth, newHeight, newDepth] = [6, 6, 6];
-  //   const response = {
-  //     body: {} as Cuboid,
-  //     status: HttpStatus.UNPROCESSABLE_ENTITY,
-  //   };
+  it('should fail to update if insufficient capacity and return 422 status code', async () => {
+    const [newWidth, newHeight, newDepth] = [7, 6, 6];
+    const data = {
+      width: newWidth,
+      height: newHeight,
+      depth: newDepth,
+    };
 
-  //   expect(response.status).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
-  //   expect(response.body.width).not.toBe(newWidth);
-  //   expect(response.body.height).not.toBe(newHeight);
-  //   expect(response.body.depth).not.toBe(newDepth);
-  // });
+    const response = await request(server)
+      .patch(urlJoin('/cuboids', cuboid.id.toString()))
+      .send(data);
+
+    // const response = {
+    //   body: {} as Cuboid,
+    //   status: HttpStatus.UNPROCESSABLE_ENTITY,
+    // };
+
+    expect(response.status).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+    expect(response.body.width).not.toBe(newWidth);
+    expect(response.body.height).not.toBe(newHeight);
+    expect(response.body.depth).not.toBe(newDepth);
+  });
 });
 
 // describe('cuboid delete', () => {

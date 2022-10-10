@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as HttpStatus from 'http-status-codes';
 import { Id } from 'objection';
-import { Cuboid } from '../models';
+import { Bag, Cuboid } from '../models';
 
 export const list = async (req: Request, res: Response): Promise<Response> => {
   const ids = req.query.ids as Id[];
@@ -34,8 +34,17 @@ export const update = async (
   res: Response
 ): Promise<Response> => {
   const { width, height, depth } = req.body;
+  const volume = width * height * depth;
+  // eslint-disable-next-line fp/no-let
+  let cuboid = (await Cuboid.query().findById(req.params.id)) as Cuboid;
 
-  const cuboid = await Cuboid.query().patchAndFetchById(req.params.id, {
+  const bagId = cuboid.bagId as Id;
+  const bag = (await Bag.query().findById(bagId)) as Bag;
+  if (volume > bag.volume) {
+    return res.sendStatus(HttpStatus.UNPROCESSABLE_ENTITY);
+  }
+
+  cuboid = await Cuboid.query().patchAndFetchById(req.params.id, {
     width,
     height,
     depth,
