@@ -28,3 +28,18 @@ export const create = async (
 
   return res.status(HttpStatus.CREATED).json(cuboid);
 };
+
+export const update = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { width, height, depth } = req.body;
+
+  const cuboid = await Cuboid.query().patchAndFetchById(req.params.id, {
+    width,
+    height,
+    depth,
+  });
+
+  return res.status(HttpStatus.OK).json(cuboid);
+};
